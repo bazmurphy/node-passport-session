@@ -11,7 +11,7 @@ const session = require('express-session');
 const flash = require('express-flash');
 const methodOverride = require('method-override');
 
-const PORT = 3000 || process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 const initalisePassport = require('./passportconfig');
 
@@ -20,11 +20,17 @@ initalisePassport(
   passport,
   // this is function getUserByEmail that we use to find our user based on the email
   (email) => users.find((user) => user.email === email),
+  // this is function getUsersById that we use to find our user based on the id
   (id) => users.find((user) => user.id === id)
 );
 
+// this is our fake database
 const users = [];
 
+// use a public static folder
+app.use(express.static('public'));
+
+// use the EJS templating language
 app.set('view-engine', 'ejs');
 
 // this parses the body from an html form
@@ -87,6 +93,7 @@ app.get('/register', checkIsNotAuthenticated, (req, res) => {
 
 app.post('/register', checkIsNotAuthenticated, async (req, res) => {
   try {
+    // hash the password with bycrypt
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     users.push({
       id: Date.now().toString(),

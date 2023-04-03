@@ -3,7 +3,7 @@
   <h1>Home</h1>
   <h2>Hi <%= name %></h2>
   <!-- this ?_method=DELETE is specific to method-override to understand what Method we want -->
-  <form action="/logout?_method=DELETE">
+  <form action="/logout?_method=DELETE" method="POST">
     <button type="submit">Logout</button>
   </form>
 </div>

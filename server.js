@@ -108,10 +108,15 @@ app.post('/register', checkIsNotAuthenticated, async (req, res) => {
   console.log(users);
 });
 
-app.delete('/logout', (req, res) => {
+app.delete('/logout', (req, res, next) => {
   // passport sets up this logOut function automatically, it will clear the session and log our user out
-  req.logOut();
-  res.redirect('/login');
+  // req.logOut is ASYNCHRONOUS
+  req.logOut((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/login');
+  });
 });
 
 // this is our own middleware function, it takes a req, a res, and a next which we call whenever we are done
